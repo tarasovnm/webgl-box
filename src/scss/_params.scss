@@ -1,0 +1,32 @@
+.params {
+  margin-bottom: 20px;
+
+  &__title {
+    margin: 0;
+    margin-bottom: 15px;
+  }
+
+  &__items {
+    display: flex;
+    margin-bottom: 15px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &__input {
+    width: 150px;
+    padding: 5px;
+  }
+
+  &__btn {
+    padding: 5px 30px;
+  }
+}

@@ -1,0 +1,30 @@
+@import "normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+$default-font: "Roboto", sans-serif;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $default-font;
+  font-size: 16px;
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+#app {
+  width: 800px;
+  height: 700px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 13px 13px 23px -14px rgba(0, 0, 0, 0.4);
+}
