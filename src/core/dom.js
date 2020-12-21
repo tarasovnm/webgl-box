@@ -84,6 +84,14 @@ class Dom {
     this.$el.classList.remove(className);
     return this;
   }
+
+  getWidth() {
+    return this.$el.offsetWidth;
+  }
+
+  getHeight() {
+    return this.$el.offsetHeight;
+  }
 }
 
 export function $(selector) {

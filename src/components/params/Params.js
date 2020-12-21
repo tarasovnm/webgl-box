@@ -39,12 +39,12 @@ export class Params extends DomComponent {
   }
 
   onClick(event) {
+    event.preventDefault();
     if (event.target.classList.contains('params__btn')) {
       const lenght = parseInt(this.$root.find('#length').text());
       const width = parseInt(this.$root.find('#width').text());
       const height = parseInt(this.$root.find('#height').text());
       this.$emit('ENTERED_SIZE', { lenght, width, height })
     }
-    event.preventDefault();
   }
 } 
