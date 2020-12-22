@@ -29,6 +29,7 @@ export class Params extends DomComponent {
             <input class="params__input" type="text" name="height" id="height" data-size="height">
           </div>
         </div>
+        <p>(Recommended values: from 1 to 10)</p>
         <button class="params__btn">Apply</button>
       </form>
     `;
@@ -41,9 +42,9 @@ export class Params extends DomComponent {
   onClick(event) {
     event.preventDefault();
     if (event.target.classList.contains('params__btn')) {
-      const lenght = parseInt(this.$root.find('#length').text());
-      const width = parseInt(this.$root.find('#width').text());
-      const height = parseInt(this.$root.find('#height').text());
+      const lenght = parseFloat(this.$root.find('#length').text());
+      const width = parseFloat(this.$root.find('#width').text());
+      const height = parseFloat(this.$root.find('#height').text());
       this.$emit('ENTERED_SIZE', { lenght, width, height })
     }
   }
