@@ -24,6 +24,14 @@ export class BoxView extends DomComponent {
     renderer.setSize(this.$root.getWidth(), this.$root.getHeight());
     this.$root.append($(renderer.domElement));
 
+    // Define light ===================================================
+
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+
     // Define geometry ================================================
 
     const geometry = new THREE.Geometry();
@@ -32,49 +40,17 @@ export class BoxView extends DomComponent {
       geometry.vertices.push(new THREE.Vector3(v[0], v[1], v[2]));
     });
 
-    /*
-      6----7
-     /|   /|
-    2----3 |
-    | |  | |
-    | 4--|-5
-    |/   |/
-    0----1
-    */
+    for (let i = 0; i < vertices.length; i = i + 3) {
+      geometry.faces.push(new THREE.Face3(i, i + 1, i + 2));
+    }
 
-    geometry.faces.push(
-      // front
-      new THREE.Face3(0, 3, 2),
-      new THREE.Face3(0, 1, 3),
-      // right
-      new THREE.Face3(1, 7, 3),
-      new THREE.Face3(1, 5, 7),
-      // back
-      new THREE.Face3(5, 6, 7),
-      new THREE.Face3(5, 4, 6),
-      // left
-      new THREE.Face3(4, 2, 6),
-      new THREE.Face3(4, 0, 2),
-      // top
-      new THREE.Face3(2, 7, 6),
-      new THREE.Face3(2, 3, 7),
-      // bottom
-      new THREE.Face3(4, 1, 0),
-      new THREE.Face3(4, 5, 1),
-    );
+    geometry.computeFaceNormals();
 
-    geometry.faces[0].color = geometry.faces[1].color = new THREE.Color('red');
-    geometry.faces[2].color = geometry.faces[3].color = new THREE.Color('yellow');
-    geometry.faces[4].color = geometry.faces[5].color = new THREE.Color('green');
-    geometry.faces[6].color = geometry.faces[7].color = new THREE.Color('cyan');
-    geometry.faces[8].color = geometry.faces[9].color = new THREE.Color('blue');
-    geometry.faces[10].color = geometry.faces[11].color = new THREE.Color('magenta');
-
-    const material = new THREE.MeshBasicMaterial({ vertexColors: THREE.FaceColors });
+    const material = new THREE.MeshPhongMaterial(0xFF4444);
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    // Create camera ===============================================
+    // Create camera ==================================================
 
     const fov = 75;
     const aspect = this.$root.getWidth() / this.$root.getHeight();
@@ -87,7 +63,7 @@ export class BoxView extends DomComponent {
     cube.rotation.x = 0.5;
     cube.rotation.y = 0.5;
 
-    // Animate =====================================================
+    // Animate ========================================================
 
     function animate() {
       requestAnimationFrame(animate);
@@ -100,7 +76,7 @@ export class BoxView extends DomComponent {
     super.init();
     this.$on('ENTERED_SIZE', data => {
       this.$root.clear();
-      this.drawBox(geometryFromSize(data.lenght, data.width, data.height));
+      this.drawBox(geometryFromSize(data.length, data.width, data.height));
     })
   }
 }
