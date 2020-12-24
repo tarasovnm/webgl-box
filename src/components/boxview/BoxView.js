@@ -2,7 +2,6 @@ import * as axios from "axios";
 import { DomComponent } from '@core/DomComponent';
 import { $ } from '@core/dom';
 import * as THREE from 'three';
-import { geometryFromSize } from './geometry';
 
 export class BoxView extends DomComponent {
   static className = 'box-view';
@@ -18,7 +17,7 @@ export class BoxView extends DomComponent {
     return '';
   }
 
-  drawBox(vertices) {
+  drawBox(triangles) {
     const scene = new THREE.Scene();
 
     const renderer = new THREE.WebGLRenderer();
@@ -37,11 +36,13 @@ export class BoxView extends DomComponent {
 
     const geometry = new THREE.Geometry();
 
-    vertices.forEach(v => {
-      geometry.vertices.push(new THREE.Vector3(v[0], v[1], v[2]));
+    triangles.forEach(triangle => {
+      triangle.forEach(v => {
+        geometry.vertices.push(new THREE.Vector3(v[0], v[1], v[2]));
+      })
     });
 
-    for (let i = 0; i < vertices.length; i = i + 3) {
+    for (let i = 0; i < triangles.length * 3; i = i + 3) {
       geometry.faces.push(new THREE.Face3(i, i + 1, i + 2));
     }
 
@@ -80,7 +81,7 @@ export class BoxView extends DomComponent {
       axios.post(`https://webgl1.herokuapp.com/setSizes`, data, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       }).then(_ => {
-        axios.get(`https://webgl1.herokuapp.com/vectors`, {
+        axios.get(`https://webgl1.herokuapp.com/triangles`, {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }).then(response => {
           this.$root.clear();

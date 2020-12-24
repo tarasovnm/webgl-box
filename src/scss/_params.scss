@@ -29,4 +29,15 @@
   &__btn {
     padding: 5px 30px;
   }
+
+  &__error {
+    padding-top: 15px;
+    color: red;
+    font-weight: bold;
+    display: none;
+
+    &--v {
+      display: inline;
+    }
+  }
 }

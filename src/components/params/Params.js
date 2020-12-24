@@ -1,4 +1,5 @@
 import { DomComponent } from '@core/DomComponent';
+import { isCorrect } from '@core/utils';
 
 export class Params extends DomComponent {
   static className = 'params';
@@ -6,7 +7,7 @@ export class Params extends DomComponent {
   constructor($root, options) {
     super($root, {
       name: 'Params',
-      listeners: ['input', 'click'],
+      listeners: ['keydown', 'click'],
       ...options
     });
   }
@@ -29,14 +30,20 @@ export class Params extends DomComponent {
             <input class="params__input" type="text" name="height" id="height" data-size="height">
           </div>
         </div>
-        <p>(Recommended values: from 1 to 10)</p>
+        <p>Acceptable values: more than 0 and up to 10</p>
+        
         <button class="params__btn">Apply</button>
+        <span class="params__error">Please enter correct values</span>
       </form>
     `;
   }
 
-  onInput(event) {
-    // console.log('Params: onInput', event.target.dataset);
+  onKeydown(event) {
+    const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
+
+    if (!keys.includes(event.key)) {
+      event.preventDefault();
+    }
   }
 
   onClick(event) {
@@ -45,7 +52,14 @@ export class Params extends DomComponent {
       const length = parseFloat(this.$root.find('#length').text());
       const width = parseFloat(this.$root.find('#width').text());
       const height = parseFloat(this.$root.find('#height').text());
-      this.$emit('ENTERED_SIZE', { length, width, height })
+
+      if (isCorrect(length) && isCorrect(width) && isCorrect(height)) {
+        this.$root.find('.params__error').removeClass('params__error--v');
+        this.$emit('ENTERED_SIZE', { length, width, height })
+      } else {
+        this.$root.find('.params__error').addClass('params__error--v');
+      }
     }
   }
-} 
+}
+
