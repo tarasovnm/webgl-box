@@ -1,3 +1,4 @@
+import * as axios from "axios";
 import { DomComponent } from '@core/DomComponent';
 import { $ } from '@core/dom';
 import * as THREE from 'three';
@@ -75,8 +76,18 @@ export class BoxView extends DomComponent {
   init() {
     super.init();
     this.$on('ENTERED_SIZE', data => {
-      this.$root.clear();
-      this.drawBox(geometryFromSize(data.length, data.width, data.height));
+
+      axios.post(`https://webgl1.herokuapp.com/setSizes`, data, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      }).then(_ => {
+        axios.get(`https://webgl1.herokuapp.com/vectors`, {
+          headers: { 'Access-Control-Allow-Origin': '*' }
+        }).then(response => {
+          this.$root.clear();
+          this.drawBox(response.data.vectors);
+        })
+      });
     })
   }
 }
+
