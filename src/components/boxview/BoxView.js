@@ -11,6 +11,10 @@ export class BoxView extends DomComponent {
       name: 'BoxView',
       ...options
     });
+
+    this.scene = new THREE.Scene();
+    this.objectsToDispose = [];
+    this.objectsToRemove = [];
   }
 
   toHTML() {
@@ -18,7 +22,7 @@ export class BoxView extends DomComponent {
   }
 
   drawBox(triangles) {
-    const scene = new THREE.Scene();
+    const scene = this.scene;
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(this.$root.getWidth(), this.$root.getHeight());
@@ -31,6 +35,8 @@ export class BoxView extends DomComponent {
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
     scene.add(light);
+
+
 
     // Define geometry ================================================
 
@@ -51,6 +57,14 @@ export class BoxView extends DomComponent {
     const material = new THREE.MeshPhongMaterial(0xFF4444);
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
+
+    this.objectsToRemove.push(light);
+    this.objectsToRemove.push(cube);
+
+    this.objectsToDispose.push(renderer.renderLists);
+    this.objectsToDispose.push(renderer);
+    this.objectsToDispose.push(geometry);
+    this.objectsToDispose.push(material);
 
     // Create camera ==================================================
 
@@ -74,6 +88,16 @@ export class BoxView extends DomComponent {
     animate();
   }
 
+  clearScene() {
+    for (let obj of this.objectsToDispose) {
+      obj.dispose();
+    }
+
+    for (let obj of this.objectsToRemove) {
+      this.scene.remove(obj);
+    }
+  }
+
   init() {
     super.init();
     this.$on('ENTERED_SIZE', data => {
@@ -84,6 +108,7 @@ export class BoxView extends DomComponent {
         axios.get(`https://webgl1.herokuapp.com/triangles`, {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }).then(response => {
+          this.clearScene();
           this.$root.clear();
           this.drawBox(response.data.vectors);
         })
