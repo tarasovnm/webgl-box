@@ -1,6 +1,6 @@
 import * as axios from "axios";
-import { DomComponent } from '@core/DomComponent';
-import { $ } from '@core/dom';
+import {DomComponent} from '@core/DomComponent';
+import {$} from '@core/dom';
 import * as THREE from 'three';
 
 export class BoxView extends DomComponent {
@@ -13,6 +13,8 @@ export class BoxView extends DomComponent {
     });
 
     this.scene = new THREE.Scene();
+    this.renderer = new THREE.WebGLRenderer();
+
     this.objectsToDispose = [];
     this.objectsToRemove = [];
   }
@@ -23,9 +25,9 @@ export class BoxView extends DomComponent {
 
   drawBox(triangles) {
     const scene = this.scene;
+    const renderer = this.renderer;
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(this.$root.getWidth(), this.$root.getHeight());
+    this.renderer.setSize(this.$root.getWidth(), this.$root.getHeight());
     this.$root.append($(renderer.domElement));
 
     // Define light ===================================================
@@ -35,8 +37,6 @@ export class BoxView extends DomComponent {
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
     scene.add(light);
-
-
 
     // Define geometry ================================================
 
@@ -95,6 +95,7 @@ export class BoxView extends DomComponent {
 
     for (let obj of this.objectsToRemove) {
       this.scene.remove(obj);
+      obj = null;
     }
   }
 
@@ -103,10 +104,10 @@ export class BoxView extends DomComponent {
     this.$on('ENTERED_SIZE', data => {
 
       axios.post(`https://webgl1.herokuapp.com/setSizes`, data, {
-        headers: { 'Access-Control-Allow-Origin': '*' }
+        headers: {'Access-Control-Allow-Origin': '*'}
       }).then(_ => {
         axios.get(`https://webgl1.herokuapp.com/triangles`, {
-          headers: { 'Access-Control-Allow-Origin': '*' }
+          headers: {'Access-Control-Allow-Origin': '*'}
         }).then(response => {
           this.clearScene();
           this.$root.clear();
@@ -116,4 +117,3 @@ export class BoxView extends DomComponent {
     })
   }
 }
-
