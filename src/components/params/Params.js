@@ -39,7 +39,8 @@ export class Params extends DomComponent {
   }
 
   onKeydown(event) {
-    const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
+    const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+      '.', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
 
     if (!keys.includes(event.key)) {
       event.preventDefault();
